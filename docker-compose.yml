@@ -1,14 +1,30 @@
 version: "3.9"
 
 services:
+    postgres-db:
+        image: postgres:latest
+        restart: always
+    environment:
+        POSTGRES_PASSWORD: sample-password
+    volumes:
+        - /var/local/pgdata:/var/lib/postgresql/data
+
     first:
         build: firstbackend
+        depends_on:
+            postgres-db:
+                condition: service_healthy
         ports:
             - 8081:8081
+
     second:
         build: secondbackend
+        depends_on:
+            postgres-db:
+                condition: service_healthy
         ports:
             - 8082:8082
+
     api-gateway:
         image: devopsfaith/krakend:watch
         volumes:
