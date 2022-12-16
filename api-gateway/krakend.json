@@ -1,0 +1,66 @@
+{
+  "$schema": "https://www.krakend.io/schema/v3.json",
+  "version": 3,
+  "name": "KrakenD - API Gateway",
+  "timeout": "3000ms",
+  "cache_ttl": "300s",
+  "output_encoding": "json",
+  "port": 8080,
+  "endpoints": [
+    {
+      "endpoint": "/api/v1/user/{id}",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/{id}",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://first:8081"
+          ],
+          "is_collection": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/posts",
+      "method": "GET",
+      "output_encoding": "json",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/posts",
+          "encoding": "json",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://second:8082"
+          ],
+          "disable_host_sanitize": false,
+          "is_collection": true,
+		  "mapping": {
+			  "collection": "posts"
+		  }
+        },
+		{
+		  "url_pattern": "/api/v1/posts/comments",
+          "encoding": "json",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://second:8082"
+          ],
+          "disable_host_sanitize": false,
+          "is_collection": true,
+          "target": "",
+		  "mapping": {
+			  "collection": "comments"
+		  }
+		}
+      ],
+      "input_query_strings": [
+        "userId"
+      ]
+    }
+  ]
+}
