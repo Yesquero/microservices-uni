@@ -38,6 +38,26 @@
           "is_collection": true
         }
       ]
+    },
+    {
+      "endpoint": "/api/v1/user/{id}/posts",
+      "method": "GET",
+      "timeout": "800ms",
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/{id}",
+          "host": [
+            "http://first:8081"
+          ]
+        },
+        {
+          "url_pattern": "/api/v1/posts/?userId={id}",
+          "host": [
+            "http://second:8082"
+          ],
+          "is_collection": true
+        }
+      ]
     }
   ]
 }
