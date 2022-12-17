@@ -24,42 +24,19 @@
       ]
     },
     {
-      "endpoint": "/api/v1/posts",
+      "endpoint": "/api/v1/posts/all",
       "method": "GET",
       "output_encoding": "json",
       "backend": [
         {
-          "url_pattern": "/api/v1/posts",
-          "encoding": "json",
+          "url_pattern": "/api/v1/posts/all",
           "sd": "static",
           "method": "GET",
           "host": [
             "http://second:8082"
           ],
-          "disable_host_sanitize": false,
-          "is_collection": true,
-		  "mapping": {
-			  "collection": "posts"
-		  }
-        },
-		{
-		  "url_pattern": "/api/v1/posts/comments",
-          "encoding": "json",
-          "sd": "static",
-          "method": "GET",
-          "host": [
-            "http://second:8082"
-          ],
-          "disable_host_sanitize": false,
-          "is_collection": true,
-          "target": "",
-		  "mapping": {
-			  "collection": "comments"
-		  }
-		}
-      ],
-      "input_query_strings": [
-        "userId"
+          "is_collection": true
+        }
       ]
     }
   ]
