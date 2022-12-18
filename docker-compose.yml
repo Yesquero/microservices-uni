@@ -15,7 +15,7 @@ services:
             - postgres-db
         environment:
             SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/postgres
-            OTEL_SERVICE_NAME: "second-backend"
+            OTEL_SERVICE_NAME: "first-backend"
             OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4317"
             # Logs are disabled by default
             OTEL_LOGS_EXPORTER: "otlp"

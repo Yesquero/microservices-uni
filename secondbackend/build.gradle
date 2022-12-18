@@ -8,10 +8,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.0.0'
     id 'io.spring.dependency-management' version '1.1.0'
-}
-
-ext {
-    set('releaseTrainVersion', "2022.0.0")
+    id "de.undercouch.download" version "4.1.2"
 }
 
 group = 'com.example'
@@ -21,17 +18,18 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri('https://repo.spring.io/snapshot')
-    }
+}
 
-    maven {
-        url = uri('https://repo.spring.io/milestone')
-    }
+bootRun {
+    mainClass.set 'io.opentelemetry.example.javagent.Application'
+}
 
-    maven {
-        url = uri('https://repo.maven.apache.org/maven2/')
-    }
+jar {
+    enabled = false
+}
+
+bootJar {
+    dependsOn("downloadAgent")
 }
 
 configurations {
@@ -41,24 +39,28 @@ configurations {
 }
 
 dependencies {
-    implementation platform('org.springframework.cloud:spring-cloud-dependencies:2022.0.0')
-    implementation platform('io.micrometer:micrometer-tracing-bom:latest.release')
-    implementation 'io.micrometer:micrometer-tracing'
-    implementation 'io.micrometer:micrometer-tracing-bridge-otel'
+    implementation platform("io.opentelemetry:opentelemetry-bom-alpha:1.21.0-alpha")
 
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//    implementation 'io.opentelemetry:opentelemetry-exporter-otlp-trace'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'com.h2database:h2'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'io.opentelemetry:opentelemetry-api'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+task downloadAgent(type: Download) {
+    src "https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar"
+    dest project.buildDir.toString() + "/otel/opentelemetry-javaagent.jar"
+    overwrite true
 }

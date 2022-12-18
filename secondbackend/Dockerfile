@@ -1,10 +1,10 @@
-FROM maven:3.8.3-openjdk-17 as build
+FROM gradle:7-jdk17 as build
 COPY . /src
 WORKDIR /src
-RUN mvn package
+RUN gradle build
 
 FROM eclipse-temurin:17-jdk-alpine
-COPY --from=build /src/target/*.jar /app/app.jar
-COPY --from=build /src/opentelemetry-javaagent.jar /app
+COPY --from=build /src/build/libs/*.jar /app/app.jar
+COPY --from=build /src/build/otel/opentelemetry-javaagent.jar /app
 EXPOSE 8082
 ENTRYPOINT ["java", "-javaagent:/app/opentelemetry-javaagent.jar","-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/app.jar"]
