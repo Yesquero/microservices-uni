@@ -15,6 +15,10 @@ services:
             - postgres-db
         environment:
             SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/postgres
+            OTEL_SERVICE_NAME: "second-backend"
+            OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4317"
+            # Logs are disabled by default
+            OTEL_LOGS_EXPORTER: "otlp"
         ports:
             - 8081:8081
 
@@ -24,6 +28,10 @@ services:
             - postgres-db
         environment:
             SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/postgres
+            OTEL_SERVICE_NAME: "second-backend"
+            OTEL_EXPORTER_OTLP_ENDPOINT: "http://collector:4317"
+            # Logs are disabled by default
+            OTEL_LOGS_EXPORTER: "otlp"
         ports:
             - 8082:8082
 
@@ -42,5 +50,20 @@ services:
             - 6831:6831/udp
             - 14268:14268
             - 14250:14250
-            - 4317:4317
-            - 4318:4318
+
+    collector:
+        image: otel/opentelemetry-collector-contrib:latest
+        command: [ "--config=/etc/otel-collector-config.yaml" ]
+        volumes:
+            - ./otel-config.yaml:/etc/otel-collector-config.yaml
+        expose:
+            - 4317
+            - 4318
+        ports:
+            - 1888:1888   # pprof extension
+            - 13133:13133 # health_check extension
+            - 4317:4317       # OTLP gRPC receiver
+            - 4318:4318        # OTLP http reciever
+            - 55670:55679 # zpages extension
+        depends_on:
+            - jaeger
