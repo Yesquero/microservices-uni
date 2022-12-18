@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 10s
+  external_labels:
+    monitor: microservices-observability
+
+scrape_configs:
+  - job_name: second-backend
+    scrape_interval: 10s
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [second:8082]
+
+  - job_name: first-backend
+    scrape_interval: 10s
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: [first:8081]
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'krakend'
+    static_configs:
+      - targets: ['api-gateway:9091']

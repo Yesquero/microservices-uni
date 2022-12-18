@@ -52,7 +52,12 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'com.h2database:h2'
 
+    // open telemetry
     implementation 'io.opentelemetry:opentelemetry-api'
+
+    // prometheus
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 }
 
 tasks.named('test') {

@@ -2,7 +2,10 @@ package com.example.secondbackend;
 
 import com.example.secondbackend.dto.CommentDto;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.UUID;
 
@@ -14,17 +17,17 @@ import java.util.UUID;
 @Table(name = "comment")
 public class Comment {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID id;
-	private Long userId;
-	private String text;
-	@ManyToOne
-	private Post post;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+    private Long userId;
+    private String text;
+    @ManyToOne
+    private Post post;
 
-	public CommentDto toDto() {
-		return new CommentDto(
-				id, userId, text, post.getUuid()
-		);
-	}
+    public CommentDto toDto() {
+        return new CommentDto(
+                id, userId, text, post.getUuid()
+        );
+    }
 }
