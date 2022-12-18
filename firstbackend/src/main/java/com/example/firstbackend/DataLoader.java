@@ -24,10 +24,12 @@ public class DataLoader implements ApplicationRunner {
             UserDto userOne = new UserDto();
             userOne.setUserId(idOne);
             userOne.setName(nameOne);
+            userOne.setAddress("Address One");
 
             UserDto userTwo = new UserDto();
             userTwo.setUserId(idTwo);
             userTwo.setName(nameTwo);
+            userOne.setAddress("Address Two");
 
             userRepository.saveAllAndFlush(List.of(userOne, userTwo));
         }

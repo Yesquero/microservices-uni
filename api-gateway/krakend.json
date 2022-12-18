@@ -8,6 +8,30 @@
   "port": 8080,
   "endpoints": [
     {
+      "endpoint": "/api/v1/user/{id}/full",
+      "method": "GET",
+      "output_encoding": "json",
+      "extra_config": {
+        "auth/validator": {
+            "alg": "RS256",
+            "jwk_url": "http://keycloak:8080/realms/master/protocol/openid-connect/certs",
+            "disable_jwk_security": true,
+            "operation_debug": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/api/v1/user/{id}/full",
+          "sd": "static",
+          "method": "GET",
+          "host": [
+            "http://first:8081"
+          ],
+          "is_collection": false
+        }
+      ]
+    },
+    {
       "endpoint": "/api/v1/user/{id}",
       "method": "GET",
       "output_encoding": "json",
@@ -52,6 +76,27 @@
         },
         {
           "url_pattern": "/api/v1/posts/?userId={id}",
+          "host": [
+            "http://second:8082"
+          ],
+          "is_collection": true
+        }
+      ]
+    },
+    {
+      "endpoint": "/api/v1/posts/{postUuid}/comments",
+      "method": "GET",
+      "extra_config": {
+        "auth/validator": {
+            "alg": "RS256",
+            "jwk_url": "http://keycloak:8080/realms/master/protocol/openid-connect/certs",
+            "disable_jwk_security": true,
+            "operation_debug": true
+        }
+      },
+      "backend": [
+        {
+          "url_pattern": "/api/v1/posts/{postUuid}/comments",
           "host": [
             "http://second:8082"
           ],
